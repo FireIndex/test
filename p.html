@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Bitmovin Player Demo</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="text/html; charset=utf-8" />
+
+    <!-- Bitmovin Player -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/bitmovin-player@8/bitmovinplayer.js"
+    ></script>
+
+    <style>
+      .player-wrapper {
+        width: 90%;
+        margin: 20px auto;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="player-wrapper">
+      <div id="player"></div>
+    </div>
+
+    <script type="text/javascript">
+      var conf = {
+        // key: '50a9e2b2-224b-4625-8cbb-39ff52547b8e',
+        // analytics: {
+        //   key: '839e4d16-5675-417a-9f24-497af6a87af5',
+        //   title: 'Cartoon Network',
+        //   videoId: 'wizard-Cartoon_Network-1700881422302',
+        // },
+      }
+
+      var source = {
+        title: 'Cartoon Network',
+        hls: 'https://new-times-kiss.loca.lt/m3u8/155998',
+        // dash: 'https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd',
+      }
+
+      var player = new bitmovin.player.Player(
+        document.getElementById('player'),
+        conf
+      )
+      player.load(source)
+    </script>
+  </body>
+</html>

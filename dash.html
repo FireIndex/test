@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.1/shaka-player.ui.min.js"
+      integrity="sha512-cW2Oln5TK+E2sycYkQ+MFGgyBcMH37uQGXLzRlj2tqxP6ElxDq2or4c9pY3kge3motx2keVZOmKNqAEuMbx+Ww=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.1/controls.min.css"
+      integrity="sha512-875jwifujnFGeXZQsgJ05JBhpkXwHxqfKibvVc6L7SIny9Y6l3SfbQUA5TSTd0H2JbJa1iWuRoIpPz+uds40PQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div
+      data-shaka-player-container
+      style="max-width: 40em"
+      data-shaka-player-cast-receiver-id="07AEE832"
+    >
+      <video
+        autoplay
+        data-shaka-player
+        id="video"
+        style="width: 100%; height: 100%"
+      ></video>
+    </div>
+    <script>
+      // Define the base URL for video manifest files
+      const baseURL = '/video/'
+
+      async function initPlayer() {
+        try {
+          const pathname = window.location.pathname.split('/')
+          const videoNum = parseInt(pathname[pathname.length - 1])
+          const manifestUri = `${baseURL}${videoNum}`
+          //   const manifestUri =
+          //     'https://bpprod3linear.akamaized.net/bpk-tv/irdeto_com_Channel_405/output/manifest.mpd'
+
+          const video = document.getElementById('video')
+          const ui = video['ui']
+          const controls = ui.getControls()
+          const player = controls.getPlayer()
+
+          // Attach player and ui to the window for debugging purposes
+          window.player = player
+          window.ui = ui
+
+          // Listen for error events
+          player.addEventListener('error', onPlayerError)
+          controls.addEventListener('error', onUIError)
+
+          // Load the manifest asynchronously
+          await player.load(manifestUri)
+          console.log('Video loaded successfully:', manifestUri)
+        } catch (error) {
+          handleInitializationError(error)
+        }
+      }
+
+      function onPlayerError(errorEvent) {
+        const error = errorEvent.detail
+        console.error('Player error - Code:', error.code, 'Object:', error)
+        // You can add UI updates or further error handling here
+      }
+
+      function onUIError(errorEvent) {
+        const error = errorEvent.detail
+        console.error('UI error - Code:', error.code, 'Object:', error)
+        // You can add UI updates or further error handling here
+      }
+
+      function handleInitializationError(error) {
+        console.error('Error during player initialization:', error)
+        // You can add UI updates or further error handling here
+      }
+
+      function initFailed(errorEvent) {
+        console.error(
+          'Unable to load the UI library:',
+          errorEvent.detail.reasonCode
+        )
+        // You can add UI updates or further error handling here
+      }
+
+      document.addEventListener('shaka-ui-loaded', initPlayer)
+      document.addEventListener('shaka-ui-load-failed', initFailed)
+    </script>
+  </body>
+</html>

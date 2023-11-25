@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  </head>
+  <body>
+    <video
+      id="__video"
+      controls
+      style="width: 500px"
+      autoplay
+      type="application/x-mpegURL"
+    ></video>
+    <br />
+
+    <button id="decreaseBtn">Prev</button>
+    <span id="num"></span>
+    <button id="increaseBtn">Next</button>
+
+    <script>
+      var num = parseInt(window.location.pathname.split('/')[1])
+      var __video = document.getElementById('__video')
+      document.getElementById('num').innerHTML = num
+
+      document
+        .getElementById('decreaseBtn')
+        .addEventListener('click', function () {
+          window.location.href = `/${num - 1}`
+        })
+
+      document
+        .getElementById('increaseBtn')
+        .addEventListener('click', function () {
+          window.location.href = `/${num + 1}`
+        })
+
+      function loadVideo(num) {
+        var videoSrc = `/video/${num}`
+
+        if (Hls.isSupported()) {
+          var hls = new Hls()
+          hls.loadSource(videoSrc)
+          hls.attachMedia(__video)
+
+          hls.on(Hls.Events.MANIFEST_PARSED, function () {
+            __video.play()
+          })
+
+          // Handle video ended event to refresh the playlist
+          __video.addEventListener('ended', function () {
+            // Redirect to the same video URL to refresh the playlist
+            window.location.href = `/${num}`
+          })
+        } else if (__video.canPlayType('application/vnd.apple.mpegurl')) {
+          __video.src = videoSrc
+          __video.addEventListener('loadedmetadata', function () {
+            __video.play()
+          })
+        }
+      }
+      loadVideo(num)
+    </script>
+  </body>
+</html>
