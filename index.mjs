@@ -29,7 +29,7 @@ async function fetchDataAndModify(id) {
     const fetchedData = await response.text()
 
     const modifiedData =
-      fetchedData.replace(/\/hls\//g, '//82.115.12.142:8080/hls/') +
+      fetchedData.replace(/\/hls\//g, 'http://82.115.12.142:8080/hls/') +
       `#EXT-X-ENDLIST\n` +
       `#EXT-X-DISCONTINUITY\n` +
       `#EXT-X-KEY:METHOD=AES-128,URI="${process.env.SERVER_URL}/video/${id}",IV=0x00000000`
